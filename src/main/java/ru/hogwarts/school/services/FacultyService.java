@@ -32,7 +32,5 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public void deleteFaculty(long id) {
-        facultyRepository.deleteById(id);
-    }
+    public void deleteFaculty(long id) {facultyRepository.deleteById(id);}
 }

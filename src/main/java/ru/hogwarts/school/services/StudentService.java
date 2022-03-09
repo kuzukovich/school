@@ -22,7 +22,6 @@ public class StudentService {
     }
 
     public Student getStudent(long id) {
-
         return studentRepository.findById(id).get();
     }
 
@@ -30,13 +29,11 @@ public class StudentService {
         return studentRepository.findByAge(age);
     }
 
-
     public Student editStudent(Student student) {
         return studentRepository.save(student);
     }
 
     public void deleteStudent(long id) {
-
         studentRepository.deleteById(id);
     }
 
