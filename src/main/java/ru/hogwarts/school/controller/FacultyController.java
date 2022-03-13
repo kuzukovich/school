@@ -26,13 +26,21 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping // GET http:localhost:8080/student?color=green
-    public ResponseEntity<Collection<Faculty>> getFacultyByColor(@RequestParam("color") String color) {
+    @GetMapping(params = "color")// GET http:localhost:8080/student?color=green
+    public ResponseEntity<Collection<Faculty>> getFacultyByColor(@RequestParam(required = false) String color) {
         Collection<Faculty> facultyByColor = facultyService.getFacultyByColor(color);
         if (facultyByColor.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(facultyByColor);
+    }
+
+    @GetMapping(params = {"color", "name"})// GET http:localhost:8080/faculty?
+    public ResponseEntity<Collection<Faculty>> getFaculty(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
+        if ((color != null && !color.isBlank()) || name != null && !name.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByColorIgnoreCaseOrNameIgnoreCase(color, name));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PostMapping// POST http:localhost:8080/faculty
@@ -52,6 +60,6 @@ public class FacultyController {
     @DeleteMapping({"{id}"}) // DELETE http:localhost:8080/faculty/1
     public ResponseEntity deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 }

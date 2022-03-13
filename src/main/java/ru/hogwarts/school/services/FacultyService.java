@@ -5,6 +5,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -32,5 +33,11 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public void deleteFaculty(long id) {facultyRepository.deleteById(id);}
+    public void deleteFaculty(long id) {
+        facultyRepository.deleteById(id);
+    }
+
+    public List<Faculty> findByColorIgnoreCaseOrNameIgnoreCase(String color, String name) {
+        return facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(color, name);
+    }
 }

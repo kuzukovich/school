@@ -26,13 +26,22 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping // GET http:localhost:8080/student?age=18
-    public ResponseEntity<Collection<Student>> getStudensByAge(@RequestParam("age") int age) {
+    @GetMapping(params = "age")// GET http:localhost:8080/student?age=18
+    public ResponseEntity<Collection<Student>> getStudensByAge(@RequestParam(required = false) int age) {
         Collection<Student> studensByAge = studentService.getStudensByAge(age);
         if (studensByAge.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(studensByAge);
+    }
+
+    @GetMapping(params = {"minAge", "maxAge"})// GET http:localhost:8080/student?age=18
+    public ResponseEntity<Collection<Student>> getStudensByAgeBetween(@RequestParam(required = false) int minAge, @RequestParam(required = false) int maxAge) {
+        Collection<Student> studensByAgeBetween = studentService.findByAgeBetween(minAge, maxAge);
+        if (studensByAgeBetween.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(studensByAgeBetween);
     }
 
     @PostMapping// POST http:localhost:8080/student
