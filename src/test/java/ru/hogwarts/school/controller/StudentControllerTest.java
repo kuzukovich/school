@@ -107,7 +107,6 @@ class StudentControllerTest {
         foundByCriteria(queryParams, student_25, student_28);
     }
 
-
     private UriComponentsBuilder getUriBuilder() {
         return UriComponentsBuilder.newInstance()
                 .scheme("http")
