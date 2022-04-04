@@ -1,4 +1,5 @@
 package ru.hogwarts.school.controller;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,12 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import ru.hogwarts.school.model.Student;
+
 import java.util.Collection;
+
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URI;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -118,4 +123,5 @@ class StudentControllerTest {
     private void foundByCriteria(MultiValueMap<String, String> queryParams, Student... students) {
         URI uri = getUriBuilder().queryParams(queryParams).build().toUri();
     }
+
 }
