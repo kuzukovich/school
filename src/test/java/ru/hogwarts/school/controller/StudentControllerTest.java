@@ -1,34 +1,18 @@
 package ru.hogwarts.school.controller;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import ru.hogwarts.school.model.Student;
-
 import java.util.Collection;
-import java.util.List;
-
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,6 +26,7 @@ class StudentControllerTest {
     private long id;
     private Collection<Student> studentList;
 
+
     @Autowired
     private StudentController studentController;
 
@@ -54,19 +39,6 @@ class StudentControllerTest {
         student.setId(1L);
         student.setName("studentName");
         student.setAge(20);
-        student2 = new Student();
-        student2.setId(1L);
-        student2.setName("studentName2");
-        student2.setAge(30);
-        student3 = new Student();
-        student3.setId(1L);
-        student3.setName("studentName3");
-        student3.setAge(40);
-        studentList = List.of(
-                student,
-                student2,
-                student3
-        );
     }
 
 
@@ -121,12 +93,30 @@ class StudentControllerTest {
 
     @Test
     void findByAgeBetween() {
-        id = restTemplate.postForObject("http://localhost:" + port + "/student/", student, Student.class).getId();
-        id = restTemplate.postForObject("http://localhost:" + port + "/student/", student2, Student.class).getId();
-        id = restTemplate.postForObject("http://localhost:" + port + "/student/", student2, Student.class).getId();
-        Assertions
-                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/student/" + "?ageMin=" + 5 + "&ageMax=" + 60, ArrayList.class).size())
-                .isGreaterThan(3);
+        Student student_18 = new Student("studentName", 18);
+        Student student_25 = new Student("studentName", 25);
+        Student student_28 = new Student("studentName", 28);
+        Student student_32 = new Student("studentName", 32);
+        restTemplate.postForEntity("http://localhost:" + port + "/student/", student_18, Student.class);
+        restTemplate.postForEntity("http://localhost:" + port + "/student/", student_25, Student.class);
+        restTemplate.postForEntity("http://localhost:" + port + "/student/", student_28, Student.class);
+        restTemplate.postForEntity("http://localhost:" + port + "/student/", student_32, Student.class);
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("minAge", "20");
+        queryParams.add("maxAge", "30");
+        foundByCriteria(queryParams, student_25, student_28);
     }
 
+
+    private UriComponentsBuilder getUriBuilder() {
+        return UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(port)
+                .path("/hogwarts/students");
+    }
+
+    private void foundByCriteria(MultiValueMap<String, String> queryParams, Student... students) {
+        URI uri = getUriBuilder().queryParams(queryParams).build().toUri();
+    }
 }
