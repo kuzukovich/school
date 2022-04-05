@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 public class AvatarController {
@@ -53,5 +54,10 @@ public class AvatarController {
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
         headers.setContentLength(avatar.getData().length);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+    }
+
+    @GetMapping(params = {"page", "size"})
+    public List<Avatar> getAvatarPage(@RequestParam int page, @RequestParam int size) {
+        return avatarService.getAvatarPage(page, size);
     }
 }
