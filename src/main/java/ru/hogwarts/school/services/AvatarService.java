@@ -1,5 +1,8 @@
 package ru.hogwarts.school.services;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
+
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
@@ -22,6 +26,8 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 public class AvatarService {
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
+
+    private static final Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
@@ -33,8 +39,9 @@ public class AvatarService {
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
-        Student student = studentService.getStudent(studentId);
+        logger.info("Was invoked method uploadAvatar for student: идентификатор {}", studentId);
 
+        Student student = studentService.getStudent(studentId);
         Path filePath = Path.of(avatarsDir, student + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -61,10 +68,12 @@ public class AvatarService {
     }
 
     public Avatar findAvatarByStudentId(Long studentId) {
+        logger.info("Was invoked method findAvatarByStudentId for student: идентификатор {}", studentId);
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     public List<Avatar> getAvatarPage(int page, int size) {
+        logger.info("Was invoked method getAvatarPage for student: страница {}, размер {} ", page, size);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         return avatarRepository.findAll(pageRequest).toList();
     }
