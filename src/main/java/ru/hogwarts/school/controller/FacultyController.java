@@ -62,4 +62,9 @@ public class FacultyController {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping({"/getLongestFacultyName"}) // DELETE http:localhost:8080/faculty/1
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
 }
