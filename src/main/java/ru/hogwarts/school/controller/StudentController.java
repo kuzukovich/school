@@ -86,4 +86,16 @@ public class StudentController {
     public List<String> getStudentNameWithA() {
         return studentService.getStudentNameWithA();
     }
+
+    @GetMapping("/parallel-thread")
+    public ResponseEntity<Void> getStudentsFlow() {
+        studentService.getStudentsFlow();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/sync-thread")
+    public ResponseEntity<Void> getStudentsFlowSynchronized() {
+        studentService.getStudentsFlowSynchronized();
+        return ResponseEntity.ok().build();
+    }
 }
