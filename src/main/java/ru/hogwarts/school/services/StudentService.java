@@ -80,4 +80,43 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
+    public void getStudentsFlow() {
+        logger.info("Was invoked method getStudentsFlow");
+        List<Student> studentList = studentRepository.findAll();
+        for (long i = 1L; i < studentList.size() / 3; i++) {
+            System.out.println(studentRepository.findById(i).get().getName());
+        }
+        new Thread(() -> {
+            for (long i = (long) (studentList.size() / 3); i < 2 * (studentList.size() / 3); i++) {
+                System.out.println(studentRepository.findById(i).get().getName());
+            }
+        }).start();
+        new Thread(() -> {
+            for (long i = (long) 2 * (studentList.size() / 3); i <= studentList.size(); i++) {
+                System.out.println(studentRepository.findById(i).get().getName());
+            }
+        }).start();
+    }
+
+    public void getStudentsFlowSynchronized() {
+        logger.info("Was invoked method getStudentsFlowSynchronized");
+        List<Student> studentList = studentRepository.findAll();
+        for (long i = 1L; i < studentList.size() / 3; i++) {
+            getStudentName(i);
+        }
+        new Thread(() -> {
+            for (long i = (long) (studentList.size() / 3); i < 2 * (studentList.size() / 3); i++) {
+                getStudentName(i);
+            }
+        }).start();
+        new Thread(() -> {
+            for (long i = (long) 2 * (studentList.size() / 3); i <= studentList.size(); i++) {
+                getStudentName(i);
+            }
+        }).start();
+    }
+
+    private synchronized void getStudentName(Long index) {
+        System.out.println(studentRepository.findById(index).get().getName());
+    }
 }
